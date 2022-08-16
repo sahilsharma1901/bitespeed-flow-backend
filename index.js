@@ -960,18 +960,20 @@ app.get("/get-flows/:token", (req, res) => {
   return res.json({ success: false, flows: [] });
 });
 
-app.get("/create-new-flow", (req, res) => {
-  return res.json({ success: true, flow: {
-    id: uuid(),
-    name: '',
-    nodes: [],
-    edges: []
-  } });
+app.post("/create-new-flow", (req, res) => {
+  setTimeout(() => {
+    return res.json({ success: true, flow: {
+      id: uuid(),
+      name: req.body.name,
+      nodes: [],
+      edges: []
+    } });
+  }, 2000)
 });
 
 app.post("/save-flows/:token", (req, res) => {
-  const token = req.params.token;
-  const receivedFlow = req.body;
+  const token = req.body.token;
+  const receivedFlow = req.body.flow;
   const updatedFlowsForToken = flowData[token].map(flow => {
     if(flow.id === receivedFlow.id){
       return receivedFlow
@@ -985,9 +987,9 @@ app.post("/save-flows/:token", (req, res) => {
   return res.json({ success: true });
 });
 
-app.post("/delete-flow/:token/:id", (req, res) => {
-  const flowId = req.params.id
-  const token = req.params.token
+app.post("/delete-flow", (req, res) => {
+  const flowId = req.body.flowId
+  const token = req.body.token
   const flows = flowData[token]
   if(flowId){
   
